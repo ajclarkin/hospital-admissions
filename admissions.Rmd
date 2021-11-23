@@ -1,0 +1,66 @@
+---
+title: "Hospital Admissions"
+author: "AJ Clarkin"
+date: "22/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r imports}
+
+library(tidyverse)
+library(here)
+
+data <- read_csv(here("data_raw/population_demographics.csv"))
+
+
+```
+
+
+
+## Task
+We want you to read in the data and answer the following questions:
+
+- Are there any problems with the values of age and deprivation?
+- What is the minimum, maximum and median age for each deprivation level?
+
+
+From the data dictionary age should be in the range 0 to 105 and deprivation 1-5.
+
+```{r task}
+
+summary(data)
+
+# We can look at the count of each age to see what's going on:
+data %>% group_by(age) %>% summarise(n()) %>% View()
+
+
+```
+### Age
+Has a maximum value of 150 which is incorrect. Looks like an error code - the next age is 99.
+
+
+### Deprivation
+There are 71 NAs but the range looks ok.
+
+
+```{r groups}
+
+# First let's get rid of the rubbish data (multiple criteria are combined with AND)
+data_filtered <- data %>% 
+  filter(age != 150,
+         !is.na(deprivation))
+
+data_filtered %>% summary()
+
+data_filtered %>% group_by(deprivation) %>% 
+  summarise(min_age=min(age), max_age=max(age), median_age=median(age))
+
+
+
+```
+
