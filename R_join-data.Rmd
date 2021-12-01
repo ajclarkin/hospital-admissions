@@ -1,6 +1,6 @@
 ---
 title: "Joining datasets"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -47,5 +47,11 @@ If you wanted to produce a table that shows those who have had either a stroke, 
 
 ```{r}
 # Add your code here!
+
+fulljoin_dataset <- full_join(stroke_patients, heart_patients,
+                              by = "patientID",
+                              suffix = c(".stroke", ".heart"))
+
+head(fulljoin_dataset)
 ```
 
