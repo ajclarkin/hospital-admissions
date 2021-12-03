@@ -1,0 +1,36 @@
+---
+title: "Summarise Dates"
+author: "AJ Clarkin"
+date: "03/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r includes}
+
+library(tidyverse)
+library(here)
+
+hosp_adm <- read_csv("data_raw/hospital_admissions.csv")
+pop_data <- read_csv("data_raw/population_demographics.csv")
+
+```
+## Join Datasets
+
+From the two datasets we want to know about patients who were admitted. Therefore need all the data from hosp_adm and only the matching rows from pop_data.
+Left join would do this but there is a risk of missing data in the population data. Inner join will ensure we only process full data.
+
+
+```{r}
+
+
+df <- inner_join(hosp_adm, pop_data, by="id")
+
+glimpse(df)
+
+```
+
