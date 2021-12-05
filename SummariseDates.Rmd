@@ -1,0 +1,80 @@
+---
+title: "Summarise Dates"
+author: "AJ Clarkin"
+date: "03/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r includes}
+
+library(tidyverse)
+library(lubridate)
+
+hosp_adm <- read_csv("data_raw/hospital_admissions.csv")
+pop_data <- read_csv("data_raw/population_demographics.csv")
+
+```
+## Join Datasets
+
+From the two datasets we want to know about patients who were admitted. Therefore need all the data from hosp_adm and only the matching rows from pop_data.
+Left join would do this but there is a risk of missing data in the population data. Inner join will ensure we only process full data.
+
+
+```{r}
+
+
+df <- inner_join(hosp_adm, pop_data, by="id")
+
+glimpse(df)
+
+```
+
+## Sort out Dates
+
+The dates are imported in dd/MM/yyyy format and need to be converted for processing.
+
+
+```{r date-manuipulation}
+
+df_proc <- df %>% 
+  mutate(
+    dt_adm = dmy(date_admit),
+    dt_dis = dmy(date_discharge),
+    diff = as.integer(dt_dis - dt_adm)
+  )
+
+head(df_proc)
+  
+  
+```
+
+## Grouping
+
+```{r grouping}
+
+df_grp <- df_proc %>% 
+  group_by(deprivation, diff) %>% 
+  summarise(num = n())
+
+df_grp
+
+
+```
+
+## Visualise
+No point in using a table, there's too much data
+
+```{r}
+
+df_grp %>% ggplot(aes(x=num)) +
+  geom_histogram(bins = 10) +
+  facet_wrap(~deprivation)
+
+
+```
+
