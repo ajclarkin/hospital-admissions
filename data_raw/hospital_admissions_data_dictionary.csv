@@ -1,0 +1,4 @@
+Variable,Variable Name,Measurement Unit,Allowed values,Description
+Patient ID,id,int,1000 - 9999,Hospital number
+Date of Admission,date_admit,date,,dd/mm/yyyy
+Date of Discharge,date_discharge,date,,dd/mm/yyyy
